@@ -1,20 +1,22 @@
-# Use the official Node.js LTS image as the base image
-FROM node:latest
+# Use a lightweight Node.js base image
+FROM node:18-alpine
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available) to install dependencies
+# Copy package.json and package-lock.json/yarn.lock files first (for caching)
 COPY package*.json ./
 
-# Install project dependencies
+# Install dependencies
 RUN npm install
+# Or if using Yarn:
+# RUN yarn install
 
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the app will run on (e.g., 3000 for Express)
+# Expose the application port
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["node", "src/index.js"]
